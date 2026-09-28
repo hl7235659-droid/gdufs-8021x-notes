@@ -1,0 +1,80 @@
+{
+  "schema": "gdufs-8021x-notes.vectors.v1",
+  "policy": {
+    "contains_credentials": false,
+    "contains_device_identifiers": false,
+    "contains_vendor_binary": false,
+    "note": "仅含公开可安全分发的（挑战 → 期望摘要）对；不含账号、口令派生值、MAC、序列号。"
+  },
+  "reproduce_requires": "摘要复现需要自备同代官方客户端的 .text 镜像及其 8 字节块密码变换结果（见 docs/tables.md）；变体分派部分可直接用 reference/variant_dispatch.py 校验。",
+  "classes": {
+    "official": "来自官方 Windows 客户端成功会话的抓包（强证据）",
+    "live": "来自真机第三方客户端、且被服务器接受的成功会话（证明服务器放行，不等于与官方逐字符相同）",
+    "synthetic": "合成/内部自洽（防回归用，不能当作与官方一致的证据）"
+  },
+  "vectors": [
+    {
+      "name": "official V6.86 · variant 4",
+      "class": "official",
+      "challenge_hex": "0538a6372190652577b9476e25c2af2a",
+      "expected_variant": 4,
+      "expected_digest_hex": "1d6df13d488d500d3014030d4e017b4ac2177b4ae092341da88fca361b164faabc42748f800d6a1ea9dcc384c488c1671da229193e097fc178b92f3ed7948df4",
+      "source": "官方客户端 V6.86 成功会话（本地抓包）",
+      "notes": "该会话中第二轮为服务/计费段，未出现 0x53。"
+    },
+    {
+      "name": "official V6.86 · variant 2",
+      "class": "official",
+      "challenge_hex": "e715920da1f2412acc8911ddbae532c9",
+      "expected_variant": 2,
+      "expected_digest_hex": "4d91bb01978709b497f38a7376dd6f66e5dca14f84d3327105e68162a72b3814657ea978e1a40846b0c4d4fcea2e34940a4615ef658de2c052e1b8488105fcd2",
+      "source": "官方客户端 V6.86 成功会话（同一份抓包的另一轮）",
+      "notes": ""
+    },
+    {
+      "name": "official retry · variant 0",
+      "class": "official",
+      "challenge_hex": "761bca1249af50d5f788cc46c9e0c6ed",
+      "expected_variant": 0,
+      "expected_digest_hex": "88e196635a307b4c62b73bc96d78f62c9c0163c2fed9e5f9f26d1503f970f9617b94f06cb27793fb7ce6d05985405686100e9a545b34c8e99a636cce148a89f8",
+      "source": "官方客户端连续重登会话（本地抓包）",
+      "notes": "历史上本地实现曾在 variant 0 上失败；此条是修好后的官方对照。"
+    },
+    {
+      "name": "live third-party session · variant 2",
+      "class": "live",
+      "challenge_hex": "577040bfc9fc10383e11a0481a2f7b74",
+      "expected_variant": 2,
+      "expected_digest_hex": "12a2978ddf810dfc1759d18e764a82e685f8b870051d121e701b58d98542f377d0f0e2df7ea4ea263b6c862f5fdb95b70184cfc8d971ec81177b43182d17cfae",
+      "source": "真机第三方客户端成功会话（本地抓包），服务器已接受该摘要",
+      "notes": "此条证明服务器放行该实现；不证明与官方逐字符相同。"
+    },
+    {
+      "name": "synthetic const · variant 0",
+      "class": "synthetic",
+      "challenge_hex": "216a696572756939303032706d737573",
+      "expected_variant": 0,
+      "expected_digest_hex": "ce0e9e382ee8fdd07ee56c70852503e0addeb5e5d2cd3493525d5735c89fcff808b0fd1c86c4cfb5dfb7cf26fc787e9c9b48c5ffdb8189d0699ba0cf3e401eaa",
+      "source": "常量输入（该字符串出现在客户端内）",
+      "notes": "挑战即该 ASCII 常量；无对应官方会话。"
+    },
+    {
+      "name": "synthetic · variant 1",
+      "class": "synthetic",
+      "challenge_hex": "c795c657768a1454ac3711fa8663d961",
+      "expected_variant": 1,
+      "expected_digest_hex": "333a0376bd4e5918f02ad8bf4ccc4e008ccb3d5a419e5dbc9be77880ae9e6c9460f24726e95020a09f610e208bd15a6850c9ee971caf7056eec4aabf224c0789",
+      "source": "挑战取自另一代官方客户端的抓包",
+      "notes": "该代客户端不含本代种子/IV，故不能作为官方锚点；仅内部自洽。"
+    },
+    {
+      "name": "synthetic · variant 3",
+      "class": "synthetic",
+      "challenge_hex": "577040bfcafc10383e11a0481a2f7b74",
+      "expected_variant": 3,
+      "expected_digest_hex": "1a7fad0998ad7f57064dc42923ee0d28e7486822cb2ab53cf1737c550fbf47abf15cf06683ab7f133571da6b31b3b5472d576768453a2a6dda24d3b0e9e21130",
+      "source": "人为构造（variant 2 的挑战第 5 字节 c9→ca）",
+      "notes": "仅为覆盖 variant 3；无官方会话。"
+    }
+  ]
+}

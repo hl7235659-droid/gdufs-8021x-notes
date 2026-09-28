@@ -1,0 +1,14 @@
+# 统一行尾：所有文本文件在仓库里一律 LF
+# 理由：协议实现侧对行尾敏感（历史上 CRLF 造成过补丁无法应用的问题），
+#       跨平台协作时最容易在这里出问题。
+* text=auto eol=lf
+
+# 明确按二进制处理（本仓库不应包含它们，仅作兜底）
+*.png binary
+*.jpg binary
+*.pcap binary
+*.pcapng binary
+*.ipk binary
+*.exe binary
+*.dll binary
+*.bin binary

@@ -1,0 +1,36 @@
+# 永不提交：抓包与身份信息
+*.pcap
+*.pcapng
+*.cap
+
+# 凭据与私密配置
+.env
+.env.*
+*.secret
+*secret*
+*credential*
+*creds*
+private/
+.redactions/
+
+# 厂商二进制与打包产物（本仓库不含，也不应被误提交）
+*.exe
+*.dll
+*.ipk
+*.apk
+*.zip
+*.7z
+*.tar.gz
+*official*
+*8021x*
+
+# 隐私/设备标识草稿
+*MAC*
+*mac_*
+*serial*
+
+# 编辑器与系统
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
